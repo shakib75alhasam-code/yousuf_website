@@ -1,5 +1,7 @@
 # File: robots.txt
 User-agent: *
+Allow: /
 Disallow: /admin/
 Sitemap: https://dryousufkabir.vercel.app/sitemap.xml
+
 
