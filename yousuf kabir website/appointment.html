@@ -1,0 +1,140 @@
+<!-- File: appointment.html
+     Appointment booking form with frontend validation and WhatsApp/Calendar placeholders.
+     NOTE: For production, integrate a backend or form provider (Formspree, Netlify forms, Google Forms, or a serverless function).
+-->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Appointment — Dr. [DR_NAME]</title>
+  <meta name="description" content="Book an appointment with Dr. [DR_NAME] — Thoracic Surgeon. In-person and telemedicine options available." />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="bg-white shadow-sm">
+    <nav class="container navbar navbar-expand-lg navbar-light">
+      <a class="navbar-brand" href="/">Dr. [DR_NAME]</a>
+    </nav>
+  </header>
+
+  <main class="py-5">
+    <div class="container">
+      <h1 class="h3 mb-4">Book an Appointment</h1>
+      <p class="text-muted">Fill the form below. We will contact you to confirm the booking. For urgent matters call <strong>+8801XXXXXXXXX</strong>.</p>
+
+      <div class="row">
+        <div class="col-lg-8">
+          <form id="appointmentForm" class="needs-validation" novalidate>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label for="fullName" class="form-label">Full name</label>
+                <input type="text" class="form-control" id="fullName" required placeholder="Your full name">
+                <div class="invalid-feedback">Please enter your name.</div>
+              </div>
+              <div class="col-md-3">
+                <label for="age" class="form-label">Age</label>
+                <input type="number" class="form-control" id="age" min="0" required placeholder="Age">
+                <div class="invalid-feedback">Please enter a valid age.</div>
+              </div>
+              <div class="col-md-3">
+                <label for="phone" class="form-label">Phone (WhatsApp)</label>
+                <input type="tel" class="form-control" id="phone" required placeholder="+8801XXXXXXXXX">
+                <div class="invalid-feedback">Please enter your phone number.</div>
+              </div>
+
+              <div class="col-md-6">
+                <label for="date" class="form-label">Preferred date</label>
+                <input type="date" id="date" class="form-control" required>
+                <div class="invalid-feedback">Please choose a date.</div>
+              </div>
+              <div class="col-md-6">
+                <label for="time" class="form-label">Preferred time</label>
+                <input type="time" id="time" class="form-control" required>
+                <div class="invalid-feedback">Please choose a time.</div>
+              </div>
+
+              <div class="col-12">
+                <label for="message" class="form-label">Brief message / reason</label>
+                <textarea id="message" rows="4" class="form-control" placeholder="Symptoms, previous surgeries, or notes"></textarea>
+              </div>
+
+              <div class="col-12 d-flex gap-2">
+                <button type="submit" class="btn btn-primary"><i class="fa fa-paper-plane"></i> Submit Request</button>
+                <!-- WhatsApp quick-send support -->
+                <a id="waQuick" href="#" class="btn btn-success" target="_blank"><i class="fa fa-whatsapp"></i> Send via WhatsApp</a>
+                <!-- Google Calendar placeholder -->
+                <a id="gcalBtn" class="btn btn-outline-secondary ms-auto" href="#" target="_blank"><i class="fa fa-calendar"></i> Add to Google Calendar (placeholder)</a>
+              </div>
+            </div>
+          </form>
+
+          <div id="alertSuccess" class="alert alert-success mt-4 d-none">Thank you! Your request has been recorded. We will contact you shortly to confirm.</div>
+
+          <p class="small text-muted mt-3">Privacy: Your data will be handled confidentially.</p>
+        </div>
+
+        <aside class="col-lg-4">
+          <div class="card p-3 mb-3">
+            <h6 class="mb-2">Chamber Hours</h6>
+            <p class="mb-0">Mon — Fri: 5:00 PM — 8:00 PM<br>Sat: 10:00 AM — 12:00 PM<br>Sun: Closed</p>
+          </div>
+
+          <div class="card p-3">
+            <h6 class="mb-2">Contact</h6>
+            <p class="mb-0">Phone: +8801XXXXXXXXX<br>Email: clinic@example.com</p>
+            <a href="https://wa.me/8801XXXXXXXXX" class="btn btn-success btn-sm mt-2"><i class="fa fa-whatsapp"></i> WhatsApp</a>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <footer class="py-4 bg-white border-top text-center small">
+    <div class="container">© <span id="year4"></span> Dr. [DR_NAME]</div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/script.js" defer></script>
+  <script>
+    // small inline to connect WA button quickly; main logic is in /script.js too
+    document.addEventListener('DOMContentLoaded', function(){
+      const form = document.getElementById('appointmentForm');
+      const waBtn = document.getElementById('waQuick');
+      const gcalBtn = document.getElementById('gcalBtn');
+
+      form.addEventListener('submit', function(e){
+        e.preventDefault();
+        if(!form.checkValidity()){
+          form.classList.add('was-validated');
+          return;
+        }
+        // Read values
+        const name = document.getElementById('fullName').value.trim();
+        const age = document.getElementById('age').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+        const date = document.getElementById('date').value;
+        const time = document.getElementById('time').value;
+        const message = document.getElementById('message').value.trim();
+
+        // Build WhatsApp message link
+        const waNumber = '8801XXXXXXXXX'; // replace with clinic number without + sign
+        const waText = encodeURIComponent(`Appointment request for Dr. [DR_NAME]\nName: ${name}\nAge: ${age}\nPhone: ${phone}\nDate: ${date}\nTime: ${time}\nNotes: ${message}`);
+        waBtn.href = `https://wa.me/${waNumber}?text=${waText}`;
+
+        // Google Calendar placeholder: open a prefilled event form (user must sign in)
+        const details = encodeURIComponent(`Appointment with Dr. [DR_NAME]\nPhone: ${phone}\nNotes: ${message}`);
+        const start = date && time ? `${date}T${time.replace(':','')}` : '';
+        // This is just a placeholder: use proper RFC3339 times when integrating calendar API/server
+        gcalBtn.href = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('Appointment with Dr. [DR_NAME]')}&details=${details}`;
+
+        // Show success (in production send to server or email)
+        document.getElementById('alertSuccess').classList.remove('d-none');
+        form.reset();
+        form.classList.remove('was-validated');
+      });
+    });
+  </script>
+</body>
+</html>

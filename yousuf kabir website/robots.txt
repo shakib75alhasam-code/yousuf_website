@@ -1,0 +1,4 @@
+# File: robots.txt
+User-agent: *
+Disallow: /admin/
+Sitemap: https://yourdomain.vercel.app/sitemap.xml
