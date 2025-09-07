@@ -49,6 +49,13 @@ footer{ background: transparent; }
 @media (max-width: 768px){
   .hero{ text-align:center; }
 }
+.card-img-top {
+  width: 100%;              /* take full card width */
+  height: 220px;            /* fixed medium height */
+  object-fit: cover;        /* crop image nicely without stretching */
+  border-radius: 6px;       /* optional: rounded corners */
+}
 
 /* Accessibility: focus styles */
 a:focus, button:focus, input:focus { outline: 3px solid rgba(11,110,166,0.15); outline-offset:2px; }
+
